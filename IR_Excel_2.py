@@ -7,74 +7,111 @@ from openpyxl.styles import Font, Color, colors
 from openpyxl import load_workbook
 import openpyxl
 
-#для удобства вводим название файла
-filename = "Список.xlsx"
+def write():
+    #для удобства вводим название файла
+    filename = "Список.xlsx"
+    filename_1 = "Шаблон_Сегмента.xlsx"
 
-#вытянули данные с документа
-active_excel = load_workbook(filename=filename,data_only=True)#data_only=True
+    #вытянули данные с документа
+    active_excel = load_workbook(filename=filename,data_only=True)#data_only=True
+    active_excel_1 = load_workbook(filename=filename_1,data_only=True)#data_only=True
 
-#делаем или смотрим активный лист
-active_sheet = active_excel.active
+    #делаем или смотрим активный лист
+    active_sheet = active_excel.active
+    active_sheet_1 = active_excel_1.active
 
-#нужно понять максимальный размер данных на листе
-max_row = active_sheet.max_row
-max_column = active_sheet.max_column
+    #нужно понять максимальный размер данных на листе
+    max_row = active_sheet.max_row
+    max_column = active_sheet.max_column
 
-#выведем информацию
-print(Fore.YELLOW)
-print("КОЛИЧЕСТВО СТРОК: " + str(max_row))
-print("КОЛИЧЕСТВО КОЛОНОК: " + str(max_column))
+    max_row_1 = active_sheet_1.max_row
+    max_column_1 = active_sheet_1.max_column
 
-#делаем формы ввода (сделать в виде форм)
-print(Fore.GREEN)
-a = input("ВВЕДИТЕ ГРУППУ: ")
-b = input("ВВЕДИТЕ ЧАСТЬ ИМЕНИ: ")
+    #выведем информацию
+    # print(Fore.YELLOW)
+    # print("КОЛИЧЕСТВО СТРОК: " + str(max_row))
+    # print("КОЛИЧЕСТВО КОЛОНОК: " + str(max_column))
 
-#забираем наименование номенклатуры
-name = []
-for i in range(2,(max_row + 1)):
-    e = active_sheet["A" + str(i)].value
-    name.append(e)
+    #делаем формы ввода (сделать в виде форм)
+    print(Fore.GREEN)
+    a_0 = input("ВВЕДИТЕ ГРУППУ: ")
+    a = a_0.upper()
+    b = input("ВВЕДИТЕ ЧАСТЬ ИМЕНИ: ")
+    c_0 = input("ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ")
+    c = c_0.lower()
 
-#поиск по группе (CD, MD...)
-# name_2 = []
-e = 0
-for q in name:
-    f = name[e][:]
-    if a and b in f:
-        print(str(e) + ' ' + f)
-    # name_2.append(f)
-    e += 1
-# print(name_2)
+    #поиск
+    #делаем цикл по заполнению СЦЕПИТЬ всего диапазона колонки в нашем списке
+    spisok = []
+    for i in range(2,(max_row + 1)):
+        a_s = active_sheet["A" + str(i)].value
+        b_s = active_sheet["B" + str(i)].value
+        g_s = active_sheet["G" + str(i)].value
 
+        d_s = str(a_s) + str(g_s) + str(b_s)
+        spisok.append(d_s)
 
-# print(name)
+    print(Fore.BLUE)
+    spisok_1 = [] #Номенклатура A (в списке)
+    spisok_2 = [] #Характеристика B (в списке)
+    spisok_2_1 = [] #пробелы
+    spisok_2_2 = [] #пробелы
+    spisok_3 = [] #Единица хранения C (в списке)
+    spisok_4 = [] #ТипИзделия D (в списке)
+    spisok_5 = [] #Штрихкод E (в списке)
+    spisok_all = [spisok_1,spisok_2,spisok_2_1,spisok_2_2,spisok_3,spisok_4,spisok_5]
 
-#забирае характеристику номенклатуры
-characteristic = []
-for i in range(2,(max_row + 1)):
-    e = active_sheet["B" + str(i)].value
-    characteristic.append(e)
-# print(characteristic)
+    e = 0
+    for q in spisok:
+        f = spisok[e][:]
+        if a in f:
+            if b in f:
+                if c in f:
+                    print(str(e+2) + ' ' + f)
+                    A = active_sheet["A" + str(e+2)].value
+                    spisok_1.append(A)
+                    B = active_sheet["B" + str(e+2)].value
+                    spisok_2.append(B)
+                    C = active_sheet["C" + str(e+2)].value
+                    spisok_3.append(C)
+                    D = active_sheet["D" + str(e+2)].value
+                    spisok_4.append(D)
+                    E = active_sheet["E" + str(e+2)].value
+                    spisok_5.append(E)
+                    spisok_2_1.append(" ")
+                    spisok_2_2.append(" ")
+        e += 1
 
-#забираем ШК
-barcode = []
-for i in range(2,(max_row + 1)):
-    e = active_sheet["E" + str(i)].value
-    barcode.append(e)
-# print(barcode)
+    #запишем полученные данные в файл заливки сегмента
+    for g in range (len(spisok_1)):
+        for h in range (len(spisok_all)):
+            _=active_sheet_1.cell(column=h+1, row=max_row_1+g+1, value=spisok_all[h][g])
 
-#забираем единицы измерения
-unit = []
-for i in range(2,(max_row + 1)):
-    e = active_sheet["C" + str(i)].value
-    unit.append(e)
-# print(unit)
+    # далее отформатируем таблицу
+    style_1 = Font(name='TimesNewRoman', color=colors.BLACK,
+               bold=False, size=14)#underline='double'
+    max_row_2=active_sheet_1.max_row
+    for z in range(2, (max_row_2 + 1)):
+        a = active_sheet_1['A' + str(z)]
+        b = active_sheet_1['B' + str(z)]
+        e = active_sheet_1['E' + str(z)]
+        f = active_sheet_1['F' + str(z)]
+        g = active_sheet_1['G' + str(z)]
 
-# #осуществляем поиск
-# if a in name_2:
-#     print(Fore.WHITE)
-#     print("КОЛИЧЕСТВО ВХОЖДЕНИЙ = " + str(name_2.count(a)))
-#     # for a in name_2:
+        a.font=style_1
+        b.font=style_1
+        e.font=style_1
+        f.font=style_1
+        g.font=style_1
 
+    # сохраняем изменения
+    active_excel_1.save("Шаблон_Сегмента.xlsx") #сохраняем все изменения
 
+    #выводим сообщение о успешности операции
+    print(Fore.YELLOW)
+    print("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!")
+
+while 1 == 1:
+    write()
+
+input()
