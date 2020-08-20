@@ -1,13 +1,13 @@
 #импортируем необходимые библиотеки
 from colorama import init #для стиля ветового
 from colorama import Fore, Back, Style #для стиля ветового
-init()#для стиля цветового
-from openpyxl import workbook
 from openpyxl.styles import Font, Color, colors
 from openpyxl import load_workbook
-import openpyxl
+from tkinter import *  #import library
+from tkinter import messagebox
+init()
 
-def write():
+def write(a,b,c):
     #для удобства вводим название файла
     filename = "Список.xlsx"
     filename_1 = "Шаблон_Сегмента.xlsx"
@@ -22,23 +22,13 @@ def write():
 
     #нужно понять максимальный размер данных на листе
     max_row = active_sheet.max_row
-    max_column = active_sheet.max_column
-
     max_row_1 = active_sheet_1.max_row
-    max_column_1 = active_sheet_1.max_column
 
-    #выведем информацию
-    # print(Fore.YELLOW)
-    # print("КОЛИЧЕСТВО СТРОК: " + str(max_row))
-    # print("КОЛИЧЕСТВО КОЛОНОК: " + str(max_column))
-
-    #делаем формы ввода (сделать в виде форм)
-    print(Fore.GREEN)
-    a_0 = input("ВВЕДИТЕ ГРУППУ: ")
-    a = a_0.upper()
-    b = input("ВВЕДИТЕ ЧАСТЬ ИМЕНИ: ")
-    c_0 = input("ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ")
-    c = c_0.lower()
+    # a_0 = input("ВВЕДИТЕ ГРУППУ: ")
+    # a = a_0.upper()
+    # b = input("ВВЕДИТЕ ЧАСТЬ ИМЕНИ: ")
+    # c_0 = input("ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ")
+    # c = c_0.lower()
 
     #поиск
     #делаем цикл по заполнению СЦЕПИТЬ всего диапазона колонки в нашем списке
@@ -51,7 +41,6 @@ def write():
         d_s = str(a_s) + str(g_s) + str(b_s)
         spisok.append(d_s)
 
-    print(Fore.BLUE)
     spisok_1 = [] #Номенклатура A (в списке)
     spisok_2 = [] #Характеристика B (в списке)
     spisok_2_1 = [] #пробелы
@@ -61,12 +50,14 @@ def write():
     spisok_5 = [] #Штрихкод E (в списке)
     spisok_all = [spisok_1,spisok_2,spisok_2_1,spisok_2_2,spisok_3,spisok_4,spisok_5]
 
+    display = []
     e = 0
     for q in spisok:
         f = spisok[e][:]
         if a in f:
             if b in f:
                 if c in f:
+                    display.append (str(e+2) + ' ' + f)
                     print(str(e+2) + ' ' + f)
                     A = active_sheet["A" + str(e+2)].value
                     spisok_1.append(A)
@@ -81,6 +72,10 @@ def write():
                     spisok_2_1.append(" ")
                     spisok_2_2.append(" ")
         e += 1
+
+    # выведем записанный товар во всплывающем окне
+    messagebox.showinfo("ЗАПИСАНЫ СЛЕДУЮЩИЕ ДАННЫЕ: ", display[:])
+    # print(display)
 
     #запишем полученные данные в файл заливки сегмента
     for g in range (len(spisok_1)):
@@ -108,10 +103,56 @@ def write():
     active_excel_1.save("Шаблон_Сегмента.xlsx") #сохраняем все изменения
 
     #выводим сообщение о успешности операции
-    print(Fore.YELLOW)
     print("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!")
 
+def MyForm():
+    """Функция показывает форму"""
+    # делаем формы ввода (сделать в виде форм)
+    root=Tk()
+    root.title("Формирование сегмента")
+
+    #определяем переменные
+    group = StringVar()
+    name = StringVar()
+    characteristic = StringVar()
+
+    # write label
+    mylabel1=Label(root, text="ВВЕДИТЕ ГРУППУ:         ", padx=30)
+    a1=Entry(root, width=20, borderwidth=3,textvariable = group)
+
+    mylabel2=Label(root, text="ВВЕДИТЕ ЧАСТЬ ИМЕНИ:    ", padx=30)
+    b1=Entry(root, width=20, borderwidth=3, textvariable = name)
+
+    mylabel3=Label(root, text="ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ", padx=30)
+    c1=Entry(root, width=20, borderwidth=3, textvariable = characteristic)
+
+    mylabel4=Label(root, text="ДАННЫЕ ВНЕСЕНЫ!", padx=60, fg="GREEN", )
+
+    # position label
+    mylabel1.grid(row=0, column=0)
+    mylabel2.grid(row=1, column=0)
+    mylabel3.grid(row=2, column=0)
+    mylabel4.grid(row=3, column=0, columnspan=2)
+
+    # position Entry
+    a1.grid(row=0, column=1)
+    b1.grid(row=1, column=1)
+    c1.grid(row=2, column=1)
+
+    def get_text():
+        """Получает введенный текст и передает его"""
+        a = group.get()
+        b = name.get()
+        c = characteristic.get()
+        write(a, b, c)
+
+    #write button and position
+    MyButton = Button(root, text="ЗАПИСАТЬ НОМЕНКЛАТУРУ В СЕГМЕНТ", padx=50, fg="BLUE", bg="YELLOW", borderwidth=3, command=lambda: get_text())
+    MyButton.grid(row=4, column=0, columnspan=2)
+
+    root.mainloop()
+
 while 1 == 1:
-    write()
+    MyForm()
 
 input()
