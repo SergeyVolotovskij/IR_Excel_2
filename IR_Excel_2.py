@@ -1,6 +1,5 @@
 #импортируем необходимые библиотеки
 from colorama import init #для стиля ветового
-from colorama import Fore, Back, Style #для стиля ветового
 from openpyxl.styles import Font, Color, colors
 from openpyxl import load_workbook
 from tkinter import *  #import library
@@ -24,11 +23,9 @@ def write(a,b,c):
     max_row = active_sheet.max_row
     max_row_1 = active_sheet_1.max_row
 
-    # a_0 = input("ВВЕДИТЕ ГРУППУ: ")
-    # a = a_0.upper()
-    # b = input("ВВЕДИТЕ ЧАСТЬ ИМЕНИ: ")
-    # c_0 = input("ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ")
-    # c = c_0.lower()
+    #корректировка регистра ввода
+    a = a.upper()
+    c = c.lower()
 
     #поиск
     #делаем цикл по заполнению СЦЕПИТЬ всего диапазона колонки в нашем списке
@@ -57,7 +54,7 @@ def write(a,b,c):
         if a in f:
             if b in f:
                 if c in f:
-                    display.append (str(e+2) + ' ' + f)
+                    display.append(str(e+2) + ' ' + f + "\n")
                     print(str(e+2) + ' ' + f)
                     A = active_sheet["A" + str(e+2)].value
                     spisok_1.append(A)
@@ -72,10 +69,6 @@ def write(a,b,c):
                     spisok_2_1.append(" ")
                     spisok_2_2.append(" ")
         e += 1
-
-    # выведем записанный товар во всплывающем окне
-    messagebox.showinfo("ЗАПИСАНЫ СЛЕДУЮЩИЕ ДАННЫЕ: ", display[:])
-    # print(display)
 
     #запишем полученные данные в файл заливки сегмента
     for g in range (len(spisok_1)):
@@ -93,48 +86,46 @@ def write(a,b,c):
         f = active_sheet_1['F' + str(z)]
         g = active_sheet_1['G' + str(z)]
 
-        a.font=style_1
-        b.font=style_1
-        e.font=style_1
-        f.font=style_1
-        g.font=style_1
+        a.font = style_1
+        b.font = style_1
+        e.font = style_1
+        f.font = style_1
+        g.font = style_1
 
     # сохраняем изменения
     active_excel_1.save("Шаблон_Сегмента.xlsx") #сохраняем все изменения
 
     #выводим сообщение о успешности операции
-    print("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!")
+    # выведем записанный товар во всплывающем окне
+    messagebox.showinfo("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!", display)
 
 def MyForm():
     """Функция показывает форму"""
     # делаем формы ввода (сделать в виде форм)
-    root=Tk()
-    root.title("Формирование сегмента")
+    root = Tk()
+    root.title("ФОРМИРОВАНИЕ СЕГМЕНТА")
 
     #определяем переменные
     group = StringVar()
     name = StringVar()
     characteristic = StringVar()
 
-    # write label
-    mylabel1=Label(root, text="ВВЕДИТЕ ГРУППУ:         ", padx=30)
-    a1=Entry(root, width=20, borderwidth=3,textvariable = group)
+    # определили полей Label и Entry
+    mylabel1 = Label(root, text="ВВЕДИТЕ ГРУППУ:", padx=30)
+    a1 = Entry(root, width=25, borderwidth=3, textvariable=group)
 
-    mylabel2=Label(root, text="ВВЕДИТЕ ЧАСТЬ ИМЕНИ:    ", padx=30)
-    b1=Entry(root, width=20, borderwidth=3, textvariable = name)
+    mylabel2 = Label(root, text="ВВЕДИТЕ ЧАСТЬ ИМЕНИ:", padx=30)
+    b1 = Entry(root, width=25, borderwidth=3, textvariable=name)
 
-    mylabel3=Label(root, text="ВВЕДИТЕ ХАРАКТЕРИСТИКУ: ", padx=30)
-    c1=Entry(root, width=20, borderwidth=3, textvariable = characteristic)
+    mylabel3 = Label(root, text="ВВЕДИТЕ ХАРАКТЕРИСТИКУ:", padx=30)
+    c1 = Entry(root, width=25, borderwidth=3, textvariable=characteristic)
 
-    mylabel4=Label(root, text="ДАННЫЕ ВНЕСЕНЫ!", padx=60, fg="GREEN", )
-
-    # position label
+    # расположение label
     mylabel1.grid(row=0, column=0)
     mylabel2.grid(row=1, column=0)
     mylabel3.grid(row=2, column=0)
-    mylabel4.grid(row=3, column=0, columnspan=2)
 
-    # position Entry
+    # расположение Entry
     a1.grid(row=0, column=1)
     b1.grid(row=1, column=1)
     c1.grid(row=2, column=1)
@@ -144,11 +135,19 @@ def MyForm():
         a = group.get()
         b = name.get()
         c = characteristic.get()
+        # удаляем предыдущие данные
+        c1.delete(0, END)
+        b1.delete(0, END)
+        a1.delete(0, END)
+        #передаем данные для обработки
         write(a, b, c)
 
-    #write button and position
-    MyButton = Button(root, text="ЗАПИСАТЬ НОМЕНКЛАТУРУ В СЕГМЕНТ", padx=50, fg="BLUE", bg="YELLOW", borderwidth=3, command=lambda: get_text())
-    MyButton.grid(row=4, column=0, columnspan=2)
+    #кнопки Записать, Выйти и их расположение
+    MyButton = Button(root, text="ЗАПИСАТЬ СЕГМЕНТ", padx=30, fg="BLUE", bg="YELLOW", borderwidth=3, command=lambda: get_text())
+    MyButton.grid(row=4, column=1)
+
+    MyButton = Button(root, text="ВЫЙТИ", padx=70, fg="YELLOW", bg="BLUE", borderwidth=3, command=lambda: quit())
+    MyButton.grid(row=4, column=0)
 
     root.mainloop()
 
