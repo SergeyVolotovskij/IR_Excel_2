@@ -24,8 +24,8 @@ def write(a,b,c):
     max_row_1 = active_sheet_1.max_row
 
     #корректировка регистра ввода
-    a = a.upper()
-    c = c.lower()
+    # a = a.upper()
+    # c = c.lower()
 
     #поиск
     #делаем цикл по заполнению СЦЕПИТЬ всего диапазона колонки в нашем списке
@@ -96,8 +96,9 @@ def write(a,b,c):
     active_excel_1.save("Шаблон_Сегмента.xlsx") #сохраняем все изменения
 
     #выводим сообщение о успешности операции
+    print("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!")
     # выведем записанный товар во всплывающем окне
-    messagebox.showinfo("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!", display)
+    # messagebox.showinfo("ДАННЫЕ ЗАПИСАНЫ И СОХРАНЕНЫ!", display)
 
 def MyForm():
     """Функция показывает форму"""
@@ -111,13 +112,13 @@ def MyForm():
     characteristic = StringVar()
 
     # определили полей Label и Entry
-    mylabel1 = Label(root, text="ВВЕДИТЕ ГРУППУ:", padx=30)
+    mylabel1 = Label(root, text="ВВЕДИТЕ ГРУППУ:", padx=30, justify=LEFT)
     a1 = Entry(root, width=25, borderwidth=3, textvariable=group)
 
-    mylabel2 = Label(root, text="ВВЕДИТЕ ЧАСТЬ ИМЕНИ:", padx=30)
+    mylabel2 = Label(root, text="ВВЕДИТЕ ЧАСТЬ ИМЕНИ:", padx=30, justify=LEFT)
     b1 = Entry(root, width=25, borderwidth=3, textvariable=name)
 
-    mylabel3 = Label(root, text="ВВЕДИТЕ ХАРАКТЕРИСТИКУ:", padx=30)
+    mylabel3 = Label(root, text="ВВЕДИТЕ ХАРАКТЕРИСТИКУ:", padx=30, justify=LEFT)
     c1 = Entry(root, width=25, borderwidth=3, textvariable=characteristic)
 
     # расположение label
@@ -155,3 +156,4 @@ while 1 == 1:
     MyForm()
 
 input()
+#pyinstaller -F IR_Excel_2.py
