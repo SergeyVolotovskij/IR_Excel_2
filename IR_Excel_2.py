@@ -3,7 +3,6 @@ from colorama import init #для стиля ветового
 from openpyxl.styles import Font, Color, colors
 from openpyxl import load_workbook
 from tkinter import *  #import library
-from tkinter import messagebox
 init()
 
 def write(a,b,c):
@@ -22,10 +21,6 @@ def write(a,b,c):
     #нужно понять максимальный размер данных на листе
     max_row = active_sheet.max_row
     max_row_1 = active_sheet_1.max_row
-
-    #корректировка регистра ввода
-    # a = a.upper()
-    # c = c.lower()
 
     #поиск
     #делаем цикл по заполнению СЦЕПИТЬ всего диапазона колонки в нашем списке
